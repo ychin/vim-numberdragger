@@ -41,7 +41,7 @@ function! Dragged()
             undojoin
         endif
     endif
-endfunc
+endfunction
 
 " TODOs:
 " - Use word under cursor to early out if not hovering over numbers
@@ -50,12 +50,15 @@ endfunc
 " - Decimal?
 " - Hover highlight. If can't do that at least when number is clicked need to
 "   highlight / underline it
+"   - When dragging either highlight/underline the number, or select in visual
+"   mode
 " - When mouse is off window figure how how to make it work
 " - Mouse wheel support? Could do ctrl-wheel or something like that
-" - Autosave for interactive editing
 " - Make this work for multi-window using win_pos
 " - Make this work with speeddate plugin or other plugins that use <C-A>/<C-X>
-function! s:Dragger()
+" - Works with insert mode
+let g:auto_save_on_drag = 1
+function! Dragger()
   let l:first_drag = 1
   let l:has_change = 0
   let l:last_col = 0
@@ -103,6 +106,10 @@ function! s:Dragger()
         else
           exec l:normal_cmd
           let l:has_change = 1
+        endif
+
+        if g:auto_save_on_drag
+          write
         endif
         redraw
       endif
